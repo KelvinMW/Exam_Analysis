@@ -1,33 +1,38 @@
 <?php
-/*
-Gibbon, Flexible & Open School System
-Copyright (C) 2010, Ross Parker
+use Gibbon\Forms\CustomFieldHandler;
+use Gibbon\Module\ExamAnalysis\Forms\BindValues;
+use Gibbon\Forms\DatabaseFormFactory;
+use Gibbon\Domain\School\FacilityGateway;
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
 use Gibbon\Domain\System\AlertLevelGateway;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Domain\DataSet;
 use Gibbon\Forms\Form;
-use Gibbon\Forms\DatabaseFormFactory;
+
 
 // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-    // SQL or Gateway query, as a dataset
-    // For a OO datatable, see https:// gist.github.com/SKuipers/e176454a2feb555126c2147865bd0626
-    // Don't forget to put header and column actions if you're using add/edit/delete pages AND include the ID/primary key as a param
-    echo "<p>test</p>";
+//get alternative headers
+$settingGateway = $container->get(SettingGateway::class);
+$attainmentAlternativeName = $settingGateway->getSettingByScope('Markbook', 'attainmentAlternativeName');
+$effortAlternativeName = $settingGateway->getSettingByScope('Markbook', 'effortAlternativeName');
+
+if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/analysis_view.php') == false){
+    $page->addError(__('You do not have access to this action.'));
+}
+else{
+    $form = Form::create('examAnalysis', $session->get('absoluteURL').'/index.php','get');
+    $form->setFactory(DatabaseFormFactory::create($pdo));
+    $form->addHiddenValue('address', $session->get('address'));
+//select analysis form
+$row = $form->addRow();
+$row->addLabel('examType', __('Select Exam Type'))
+    ->description(__('Select the type of exam'));
+$types = $settingGateway->getSettingByScope('Formal Assessment', 'internalAssessmentTypes');
+$row->addSelect('type')->fromString($types)->required()->placeholder();
+// Get the form inputs from the user
+
+}
