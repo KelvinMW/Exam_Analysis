@@ -20,14 +20,14 @@ along with this program.  If not, see <http:// www.gnu.org/licenses/>.
 // This file describes the module, including database tables
 
 // Basic variables
-$name        = '';            // The name of the module as it appears to users. Needs to be unique to installation. Also the name of the folder that holds the unit.
-$description = '';            // Short text description
-$entryURL    = "index.php";   // The landing page for the unit, used in the main menu
+$name        = 'Exam Analysis';            // The name of the module as it appears to users. Needs to be unique to installation. Also the name of the folder that holds the unit.
+$description = 'This module is for administrators to do exam analysis';            // Short text description
+$entryURL    = "graphical_anasysis_view.php";   // The landing page for the unit, used in the main menu
 $type        = "Additional";  // Do not change.
-$category    = '';            // The main menu area to place the module in
-$version     = '';            // Version number
-$author      = '';            // Your name
-$url         = '';            // Your URL
+$category    = 'Assess';            // The main menu area to place the module in
+$version     = '1.0.00';            // Version number
+$author      = 'Kelvin';            // Your name
+$url         = 'https://github.com/KelvinMW';            // Your URL
 
 // Module tables & gibbonSettings entries
 $moduleTables[] = ''; // One array entry for every database table you need to create. Might be nice to preface the table name with the module name, to keep the db neat. 
@@ -39,12 +39,12 @@ $gibbonSetting[] = "";
 // Action rows 
 // One array per action
 $actionRows[] = [
-    'name'                      => '', // The name of the action (appears to user in the right hand side module menu)
+    'name'                      => 'Exam Analysis', // The name of the action (appears to user in the right hand side module menu)
     'precedence'                => '0',// If it is a grouped action, the precedence controls which is highest action in group
-    'category'                  => '', // Optional: subgroups for the right hand side module menu
-    'description'               => '', // Text description
-    'URLList'                   => '', // List of pages included in this action
-    'entryURL'                  => '', // The landing action for the page.
+    'category'                  => 'Analysis', // Optional: subgroups for the right hand side module menu
+    'description'               => 'This module is for administrators to do exam analysis', // Text description
+    'URLList'                   => 'analysis_view.php', // List of pages included in this action
+    'entryURL'                  => 'analysis_view.php', // The landing action for the page.
     'entrySidebar'              => 'Y', // Whether or not there's a sidebar on entry to the action
     'menuShow'                  => 'Y', // Whether or not this action shows up in menus or if it's hidden
     'defaultPermissionAdmin'    => 'Y', // Default permission for built in role Admin
@@ -57,6 +57,26 @@ $actionRows[] = [
     'categoryPermissionParent'  => 'Y', // Should this action be available to user roles in the Parent category?
     'categoryPermissionOther'   => 'Y', // Should this action be available to user roles in the Other category?
 ];
-
-// Hooks
+// Action rows 
+// One array per action
+$actionRows[] = [
+    'name'                      => 'Graphical Analysis', // The name of the action (appears to user in the right hand side module menu)
+    'precedence'                => '0',// If it is a grouped action, the precedence controls which is highest action in group
+    'category'                  => 'Analysis', // Optional: subgroups for the right hand side module menu
+    'description'               => 'This module is for administrators to do exam analysis', // Text description
+    'URLList'                   => 'graphical_anasysis_view.php', // List of pages included in this action
+    'entryURL'                  => 'graphical_anasysis_view.php', // The landing action for the page.
+    'entrySidebar'              => 'Y', // Whether or not there's a sidebar on entry to the action
+    'menuShow'                  => 'Y', // Whether or not this action shows up in menus or if it's hidden
+    'defaultPermissionAdmin'    => 'Y', // Default permission for built in role Admin
+    'defaultPermissionTeacher'  => 'Y', // Default permission for built in role Teacher
+    'defaultPermissionStudent'  => 'N', // Default permission for built in role Student
+    'defaultPermissionParent'   => 'N', // Default permission for built in role Parent
+    'defaultPermissionSupport'  => 'Y', // Default permission for built in role Support
+    'categoryPermissionStaff'   => 'Y', // Should this action be available to user roles in the Staff category?
+    'categoryPermissionStudent' => 'Y', // Should this action be available to user roles in the Student category?
+    'categoryPermissionParent'  => 'Y', // Should this action be available to user roles in the Parent category?
+    'categoryPermissionOther'   => 'Y', // Should this action be available to user roles in the Other category?
+];
+// Hooks 
 $hooks[] = ''; // Serialised array to create hook and set options. See Hooks documentation online.

@@ -21,15 +21,13 @@ use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Domain\DataSet;
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
 
 // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-if (!isActionAccessible($guid, $connection2, '/modules/Exam Analysis/analysis_view.php')) {
-	// Access denied
-	$page->addError(__('You do not have access to this action.'));
-} else {
     // SQL or Gateway query, as a dataset
     // For a OO datatable, see https:// gist.github.com/SKuipers/e176454a2feb555126c2147865bd0626
     // Don't forget to put header and column actions if you're using add/edit/delete pages AND include the ID/primary key as a param
-}	
+    echo "<p>test</p>";
