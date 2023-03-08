@@ -37,13 +37,7 @@ else
 
  $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $session->get('gibbonSchoolYearID');
  $gibbonCourseID = $_GET['gibbonCourseID'] ?? null;
- echo "<table>";
- echo "<tr><th>Student ID</th><th>Student Name</th>";
- echo "</table>";
-echo 'Kindly select the information of the exam you want to analyse :';
-print_r($_GET);
-print_r($_POST);
-//create form object /index.php?q=/modules/
+
 $form = Form::create('action',$session->get('absoluteURL').'index.php?q=/modules/Exam Analysis/analysis_view.php');
 $form->setFactory(DatabaseFormFactory::create($pdo));
 $form->addHiddenValue('q', $session->get('address'));
@@ -134,13 +128,13 @@ foreach ($results as $row) {
 sort($courses);
 
 // Build the table headers
-$table = '<table>';
-$table .= '<tr><th>Rank</th>';
-$table .= '<th>Student Name</th>';
-foreach ($courses as $course) {
-    $table .= '<th>' . $course . '</th>';
-}
-$table .= '<th>Total Score</th><th>Mean Score</th></tr>';
+//$table = '<table>';
+//$table .= '<tr><th>Rank</th>';
+//$table .= '<th><b>Student Name<b></th>';
+//foreach ($courses as $course) {
+//    $table .= '<th><b>' . $course . '</b></th>';
+//}
+//$table .= '<th>Total Score</th><th>Mean Score</th></tr>';
 
 // Build the table rows
 $student_averages = array();
@@ -165,6 +159,13 @@ $students = array_keys($student_averages);
 
 // Build the table headers
 $table = '<table>';
+// Build the export button
+$table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
+$table .= '<form method="post" action="export.php">';
+$table .= '<input type="hidden" name="data" value="' . base64_encode(json_encode($data)) . '">';
+$table .= '<button type="submit" class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Export to Excel</button>';
+$table .= '</form>';
+$table .= '</td><tr>';
 $table .= '<tr><th>Rank</th>';
 $table .= '<th>Student Name</th>';
 foreach ($courses as $course) {
@@ -175,8 +176,8 @@ $rank=0;
 // Build the table rows based on sorted students
 foreach ($students as $student) {
     $rank = $rank + 1;
-    $table .= '<tr><td>' . $rank . '</td>';
-    $table .= '<td>' . $student . '</td>';
+    $table .= '<tr><td class="course bg-blue-100">' . $rank . '</td>';
+    $table .= '<td><b>' . $student . '</b></td>';
     $total_score = 0;
     foreach ($courses as $course) {
         $attainment = isset($data[$student][$course]) ? $data[$student][$course] : '-';
@@ -184,11 +185,11 @@ foreach ($students as $student) {
         $table .= '<td>' . $attainment . '</td>';
     }
     $average_score = $student_averages[$student];
-    $table .= '<td>' . $total_score . '</td><td>' . round($average_score,2) . '</td></tr>';
+    $table .= '<td class="course bg-blue-100"><b>' . $total_score . '</b></td><td class="course bg-blue-100"><b>' . round($average_score,2) . '</b></td></tr>';
 }
 
 // Build the table footer with course averages
-$table .= '<tr><td>Mean Score</td>';
+$table .= '<tr><td></td><td><b>Mean Score<b></td>';
 foreach ($courses as $course) {
     $course_attainments = array();
     foreach ($data as $student => $attainments) {
@@ -197,14 +198,14 @@ foreach ($courses as $course) {
         }
     }
     $course_average = count($course_attainments) > 0 ? array_sum($course_attainments) / count($course_attainments) : '-';
-    $table .= '<td>' . round($course_average, 2) . '</td>';
+    $table .= '<td class="course bg-blue-100"><b>' . round($course_average, 2) . '</b></td>';
 }
 $table .= '<td></td><td></td></tr>';
-
 $table .= '</table>';
 
 // Output the table
 echo $table;
+
 
 }
 }

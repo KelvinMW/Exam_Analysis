@@ -22,7 +22,7 @@ along with this program.  If not, see <http:// www.gnu.org/licenses/>.
 // Basic variables
 $name        = 'Exam Analysis';            // The name of the module as it appears to users. Needs to be unique to installation. Also the name of the folder that holds the unit.
 $description = 'This module is for administrators to do exam analysis';            // Short text description
-$entryURL    = "graphical_anasysis_view.php";   // The landing page for the unit, used in the main menu
+$entryURL    = "anasysis_view.php";   // The landing page for the unit, used in the main menu
 $type        = "Additional";  // Do not change.
 $category    = 'Assess';            // The main menu area to place the module in
 $version     = '1.0.00';            // Version number
