@@ -25,14 +25,18 @@ $description = 'This module is for administrators to do exam analysis';         
 $entryURL    = "analysis_view.php";   // The landing page for the unit, used in the main menu
 $type        = "Additional";  // Do not change.
 $category    = 'Assess';            // The main menu area to place the module in
-$version     = '1.0.00';            // Version number
+$version     = '1.1.00';            // Version number
 $author      = 'Kelvin';            // Your name
 $url         = 'https://github.com/KelvinMW';            // Your URL
 
-// Module tables & gibbonSettings entries
-$moduleTables[] = ''; // One array entry for every database table you need to create. Might be nice to preface the table name with the module name, to keep the db neat. 
-$moduleTables[] = ''; // Also can be used to put data into gibbonSettings. Other sql can be run, but resulting data will not be cleaned up on uninstall.
+/*/ Module tables & gibbonSettings entries
+//$moduleTables[] = ''; // One array entry for every database table you need to create. Might be nice to preface the table name with the module name, to keep the db neat. 
+//$moduleTables[] = ''; // Also can be used to put data into gibbonSettings. Other sql can be run, but resulting data will not be cleaned up on uninstall.
 
+*/
+$moduleTables[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID`, `scope`, `name`, `nameDisplay`, `description`, `value`)
+    VALUES
+        (NULL, 'Exam Analysis', 'analyse', 'Exam Analysis', 'Analyse different exams.', '')";
 // Add gibbonSettings entries
 $gibbonSetting[] = "";
 
@@ -53,12 +57,13 @@ $actionRows[] = [
     'defaultPermissionParent'   => 'N', // Default permission for built in role Parent
     'defaultPermissionSupport'  => 'Y', // Default permission for built in role Support
     'categoryPermissionStaff'   => 'Y', // Should this action be available to user roles in the Staff category?
-    'categoryPermissionStudent' => 'Y', // Should this action be available to user roles in the Student category?
-    'categoryPermissionParent'  => 'Y', // Should this action be available to user roles in the Parent category?
+    'categoryPermissionStudent' => 'N', // Should this action be available to user roles in the Student category?
+    'categoryPermissionParent'  => 'N', // Should this action be available to user roles in the Parent category?
     'categoryPermissionOther'   => 'Y', // Should this action be available to user roles in the Other category?
 ];
 // Action rows 
 // One array per action
+
 /*
 $actionRows[] = [
     'name'                      => 'Graphical Analysis', // The name of the action (appears to user in the right hand side module menu)
@@ -79,6 +84,8 @@ $actionRows[] = [
     'categoryPermissionParent'  => 'Y', // Should this action be available to user roles in the Parent category?
     'categoryPermissionOther'   => 'Y', // Should this action be available to user roles in the Other category?
 ];
+*/
 // Hooks 
 $hooks[] = ''; // Serialised array to create hook and set options. See Hooks documentation online.
-*/
+
+?>

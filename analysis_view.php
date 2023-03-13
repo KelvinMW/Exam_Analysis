@@ -138,6 +138,7 @@ sort($courses);
 
 // Build the table rows
 $student_averages = array();
+//$table = DataTable::create('ExamAnalysis');
 foreach ($students as $student) {
     $table .= '<tr><td>' . $student . '</td>';
     $total_score = 0;
