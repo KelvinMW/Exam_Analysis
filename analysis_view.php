@@ -38,7 +38,7 @@ else
  $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $session->get('gibbonSchoolYearID');
  $gibbonCourseID = $_GET['gibbonCourseID'] ?? null;
 
-$form = Form::create('action',$session->get('absoluteURL').'index.php?q=/modules/Exam Analysis/analysis_view.php');
+$form = Form::create('action',$session->get('absoluteURL').'/index.php?q=/modules/Exam Analysis/analysis_view.php');
 $form->setFactory(DatabaseFormFactory::create($pdo));
 $form->addHiddenValue('q', $session->get('address'));
 
