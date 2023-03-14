@@ -34,11 +34,14 @@ $url         = 'https://github.com/KelvinMW';            // Your URL
 //$moduleTables[] = ''; // Also can be used to put data into gibbonSettings. Other sql can be run, but resulting data will not be cleaned up on uninstall.
 
 */
-$moduleTables[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID`, `scope`, `name`, `nameDisplay`, `description`, `value`)
+/*$moduleTables[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID`, `scope`, `name`, `nameDisplay`, `description`, `value`)
     VALUES
-        (NULL, 'Exam Analysis', 'analyse', 'Exam Analysis', 'Analyse different exams.', '')";
+        (NULL, 'Exam Analysis', 'analyse', 'Exam Analysis', 'Analyse different exams. Better.', '')";
+        */
 // Add gibbonSettings entries
-$gibbonSetting[] = "";
+$gibbonSetting[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID`, `scope`, `name`, `nameDisplay`, `description`, `value`)
+VALUES
+    (NULL, 'Exam Analysis', 'analyse', 'Exam Analysis', 'Analyse different exams. Better.', '')";
 
 // Action rows 
 // One array per action
@@ -86,6 +89,6 @@ $actionRows[] = [
 ];
 */
 // Hooks 
-$hooks[] = ''; // Serialised array to create hook and set options. See Hooks documentation online.
+//$hooks[] = ''; // Serialised array to create hook and set options. See Hooks documentation online.
 
 ?>
