@@ -127,15 +127,6 @@ foreach ($results as $row) {
 //sort($students);
 sort($courses);
 
-// Build the table headers
-//$table = '<table>';
-//$table .= '<tr><th>Rank</th>';
-//$table .= '<th><b>Student Name<b></th>';
-//foreach ($courses as $course) {
-//    $table .= '<th><b>' . $course . '</b></th>';
-//}
-//$table .= '<th>Total Score</th><th>Mean Score</th></tr>';
-
 // Build the table rows
 $student_averages = array();
 //$table = DataTable::create('ExamAnalysis');
@@ -162,6 +153,7 @@ $students = array_keys($student_averages);
 $table = '<table>';
 // Build the export button
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
+//a click to export the table to spreadsheet using phpspreadsheet on the export.php file 
 $table .= '<form method="post" action="export.php">';
 $table .= '<input type="hidden" name="data" value="' . base64_encode(json_encode($data)) . '">';
 $table .= '<button type="submit" class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Export to Excel</button>';
