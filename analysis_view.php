@@ -15,6 +15,10 @@ use Gibbon\Domain\DataSet;
 use Gibbon\Forms\Form;
 use Gibbon\Http\Url;
 
+//import phpSpreadsheet classes
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
@@ -129,7 +133,8 @@ sort($courses);
 
 // Build the table rows
 $student_averages = array();
-//$table = DataTable::create('ExamAnalysis');
+
+$table = '';
 foreach ($students as $student) {
     $table .= '<tr><td>' . $student . '</td>';
     $total_score = 0;
@@ -148,16 +153,11 @@ arsort($student_averages);
 
 // Reorder students array based on sorted keys
 $students = array_keys($student_averages);
-
-// Build the table headers
+// Build the table headers assuming all query data is okay
 $table = '<table>';
 // Build the export button
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
-//a click to export the table to spreadsheet using phpspreadsheet on the export.php file 
-$table .= '<form method="post" action="export.php">';
-$table .= '<input type="hidden" name="data" value="' . base64_encode(json_encode($data)) . '">';
-$table .= '<button type="submit" class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Export to Excel</button>';
-$table .= '</form>';
+$table .= '<form method="post"><input type="submit" name="export" value="Export to CSV"></form>';
 $table .= '</td><tr>';
 $table .= '<tr><th>Rank</th>';
 $table .= '<th>Student Name</th>';
@@ -165,6 +165,7 @@ foreach ($courses as $course) {
     $table .= '<th>' . $course . '</th>';
 }
 $table .= '<th>Total Score</th><th>Mean Score</th></tr>';
+
 $rank=0;
 // Build the table rows based on sorted students
 foreach ($students as $student) {
@@ -173,6 +174,7 @@ foreach ($students as $student) {
     $table .= '<td><b>' . $student . '</b></td>';
     $total_score = 0;
     foreach ($courses as $course) {
+        // ...
         $attainment = isset($data[$student][$course]) ? $data[$student][$course] : '-';
         $total_score += floatval($attainment);
         $table .= '<td>' . $attainment . '</td>';
@@ -180,7 +182,6 @@ foreach ($students as $student) {
     $average_score = $student_averages[$student];
     $table .= '<td class="course bg-blue-100"><b>' . $total_score . '</b></td><td class="course bg-blue-100"><b>' . round($average_score,2) . '</b></td></tr>';
 }
-
 // Build the table footer with course averages
 $table .= '<tr><td></td><td><b>Mean Score<b></td>';
 foreach ($courses as $course) {
@@ -199,9 +200,29 @@ $table .= '</table>';
 // Output the table
 echo $table;
 
+// Check if export button was clicked
+if (isset($_POST['export'])) {
+    // Set headers for download
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=data.csv');
+
+    // Open output stream
+    $output = fopen('php://output', 'w');
+
+    // Write headers to CSV file
+    fputcsv($output, array_merge(['Rank', 'Student Name'], array_values($courses), ['Total Score', 'Mean Score']));
+
+    // Write rows to CSV file
+    foreach ($students as$student) {
+        // ...
+        fputcsv($output, array_merge([$rank, $student], array_values($row), [$total_score,$average_score]));
+        ++$rank;
+     }
+
+     fclose($output);
+     exit();
+}
 
 }
 }
-
-
 ?>
