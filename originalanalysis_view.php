@@ -14,15 +14,7 @@ use Gibbon\Tables\DataTable;
 use Gibbon\Domain\DataSet;
 use Gibbon\Forms\Form;
 use Gibbon\Http\Url;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Gibbon\Forms\Input\Button;
-use Gibbon\Forms\Input\Input;
 
-<<<<<<< HEAD
-echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>';
-=======
 //import phpSpreadsheet classes
 require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -31,7 +23,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
->>>>>>> 686d4ac5743c0610e83b288d39b6d349637a62d7
 //get alternative headers
 $settingGateway = $container->get(SettingGateway::class);
 $attainmentAlternativeName = $settingGateway->getSettingByScope('Markbook', 'attainmentAlternativeName');
@@ -43,11 +34,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/analysis_vie
 else
 
 {
-    //import phpSpreadsheet classes
-//require __DIR__.'/vendor/autoload.php';
-
-// Module includes
-require_once __DIR__ . '/moduleFunctions.php';
   // School Year Info
   $settingGateway = $container->get(SettingGateway::class);
   $attainmentAlternativeName = $settingGateway->getSettingByScope('Markbook', 'attainmentAlternativeName');
@@ -90,6 +76,8 @@ $row = $form->addRow();
 //$row = $form->addRow();
 $row->addFooter();
 $row->addSubmit();
+$row->addSearchSubmit('export', __('Export to CSV'));
+// '<form method="post"><input type="submit" name="export" value="Export to CSV"></form>';
 $form->loadAllValuesFrom($request);
 echo $form->getOutput();
 
@@ -170,14 +158,9 @@ $students = array_keys($student_averages);
 $table = '<table>';
 // Build the export button
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
-<<<<<<< HEAD
-$table .= '<button onclick="exportTableToCSV()" class="btn btn-primary">Export to CSV</button>';
-
-=======
+//$row->addSearchSubmit('export', __('Export to CSV'));
 $table .= '<form method="post"><input type="submit" name="export" value="Export to CSV"></form>';
->>>>>>> 686d4ac5743c0610e83b288d39b6d349637a62d7
 $table .= '</td><tr>';
-
 $table .= '<tr><th>Rank</th>';
 $table .= '<th>Student Name</th>';
 foreach ($courses as $course) {
@@ -213,55 +196,26 @@ foreach ($courses as $course) {
     $course_average = count($course_attainments) > 0 ? array_sum($course_attainments) / count($course_attainments) : '-';
     $table .= '<td class="course bg-blue-100"><b>' . round($course_average, 2) . '</b></td>';
 }
-//add export
-$table .= '<td></td><td><button onclick="exportTableToCSV()" class="btn btn-primary">Export</button></td></tr>';
+$table .= '<td></td><td></td></tr>';
 $table .= '</table>';
-
 
 // Output the table
 echo $table;
 
-<<<<<<< HEAD
-// Add JavaScript function to export table to CSV
-echo '<script>
-function exportTableToCSV() {
-    var csv = [];
-    var rows = document.querySelectorAll("table tr");
-    
-    for (var i = 0; i < rows.length; i++) {
-        var row = [], cols = rows[i].querySelectorAll("td, th");
-        
-        for (var j = 0; j < cols.length; j++) 
-            row.push(cols[j].innerText);
-        
-        csv.push(row.join(","));
-    }
-
-    var csvContent = "data:text/csv;charset=utf-8," + csv.join("\\n");
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "table.csv");
-    document.body.appendChild(link);
-    link.click();
-}
-</script>';
-=======
 // Check if export button was clicked
 if (isset($_POST['export'])) {
+  
+  $gibbon->session;
     // Set headers for download
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=data.csv');
 
     // Open output stream
     $output = fopen('php://output', 'w');
->>>>>>> 686d4ac5743c0610e83b288d39b6d349637a62d7
 
     // Write headers to CSV file
     fputcsv($output, array_merge(['Rank', 'Student Name'], array_values($courses), ['Total Score', 'Mean Score']));
 
-<<<<<<< HEAD
-=======
     // Write rows to CSV file
     foreach ($students as$student) {
         // ...
@@ -273,7 +227,6 @@ if (isset($_POST['export'])) {
      exit();
 }
 
->>>>>>> 686d4ac5743c0610e83b288d39b6d349637a62d7
 }
 }
 ?>
