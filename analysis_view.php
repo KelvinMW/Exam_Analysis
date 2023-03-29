@@ -19,11 +19,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Gibbon\Forms\Input\Button;
 use Gibbon\Forms\Input\Input;
 
-
-// Module includes
-require_once __DIR__ . '/moduleFunctions.php';
-
->>>>>>> 686d4ac5743c0610e83b288d39b6d349637a62d7
+echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>';
 //get alternative headers
 $settingGateway = $container->get(SettingGateway::class);
 $attainmentAlternativeName = $settingGateway->getSettingByScope('Markbook', 'attainmentAlternativeName');
@@ -162,10 +159,8 @@ $students = array_keys($student_averages);
 $table = '<table>';
 // Build the export button
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
-$table .= '<form method="post" action="export.php">';
-$table .= '<input type="hidden" name="data" value="' . base64_encode(json_encode($data)) . '">';
-$table .= '<button type="submit" class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Export to Excel</button>';
-$table .= '</form>';
+$table .= '<button onclick="exportTableToCSV()" class="btn btn-primary">Export to CSV</button>';
+
 $table .= '</td><tr>';
 
 $table .= '<tr><th>Rank</th>';
@@ -211,35 +206,32 @@ $table .= '</table>';
 // Output the table
 echo $table;
 
+// Add JavaScript function to export table to CSV
+echo '<script>
+function exportTableToCSV() {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        
+        for (var j = 0; j < cols.length; j++) 
+            row.push(cols[j].innerText);
+        
+        csv.push(row.join(","));
+    }
 
+    var csvContent = "data:text/csv;charset=utf-8," + csv.join("\\n");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "table.csv");
+    document.body.appendChild(link);
+    link.click();
 }
 </script>';
-=======
-// Check if export button was clicked
-if (isset($_POST['export'])) {
-    // Set headers for download
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=data.csv');
 
-    // Open output stream
-    $output = fopen('php://output', 'w');
->>>>>>> 686d4ac5743c0610e83b288d39b6d349637a62d7
 
-    // Write headers to CSV file
-    fputcsv($output, array_merge(['Rank', 'Student Name'], array_values($courses), ['Total Score', 'Mean Score']));
-
-<<<<<<< HEAD
-=======
-    // Write rows to CSV file
-    foreach ($students as$student) {
-        // ...
-        fputcsv($output, array_merge([$rank, $student], array_values($row), [$total_score,$average_score]));
-        ++$rank;
-     }
-
-     fclose($output);
-     exit();
 }
-
-
+}
 ?>
