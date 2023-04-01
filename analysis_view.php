@@ -160,8 +160,14 @@ $table = '<table>';
 // Build the export button
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
 $table .= '<button onclick="exportTableToCSV()" class="btn btn-primary">Export to CSV</button>';
-
 $table .= '</td><tr>';
+
+$table .= '<tr><th colspan="' . (count($courses) + 4) . '">';
+foreach($formGroups as $formGroup){
+$table .= '<b>' . $formGroup. ', ' . '</b>';
+}
+$table .= '<b> EXAM NAME: ' . $exam_type. '' . '</b>';
+$table .= '</th><tr>';
 
 $table .= '<tr><th>Rank</th>';
 $table .= '<th>Student Name</th>';
@@ -225,7 +231,7 @@ function exportTableToCSV() {
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "table.csv");
+    link.setAttribute("download", "analysis.csv");
     document.body.appendChild(link);
     link.click();
 }
