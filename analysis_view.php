@@ -129,10 +129,8 @@ foreach ($results as $row) {
     $data[$student][$course] = $attainment;
 }
 
-// Sort students and courses alphabetically
-//sort($students);
+// Sort courses alphabetically
 sort($courses);
-
 // Build the table rows
 $student_averages = array();
 
@@ -140,19 +138,21 @@ $table = '';
 foreach ($students as $student) {
     $table .= '<tr><td>' . $student . '</td>';
     $total_score = 0;
+    $num_scores = 0;
     foreach ($courses as $course) {
         $attainment = isset($data[$student][$course]) ? $data[$student][$course] : '-';
-        $total_score += floatval($attainment);
+        if ($attainment !== '' && $attainment !== null) {
+            $total_score += floatval($attainment);
+            $num_scores++;
+        }
         $table .= '<td>' . $attainment . '</td>';
     }
-    $average_score = count($courses) > 0 ? $total_score / count($courses) : '-';
+    $average_score = $num_scores > 0 ? $total_score / $num_scores : '-';
     $table .= '<td>' . $total_score . '</td><td>' . $average_score . '</td></tr>';
     $student_averages[$student] = $average_score;
 }
-
 // Sort students by average score
 arsort($student_averages);
-
 // Reorder students array based on sorted keys
 $students = array_keys($student_averages);
 // Build the table headers assuming all query data is okay
@@ -165,6 +165,7 @@ $table .= '</td><tr>';
 $table .= '<tr><th colspan="' . (count($courses) + 4) . '">';
 foreach($formGroups as $formGroup){
 $table .= '<b>' . $formGroup. ', ' . '</b>';
+$allformGroups .= $formGroup. ', ';
 }
 $table .= '<b> EXAM NAME: ' . $exam_type. '' . '</b>';
 $table .= '</th><tr>';
@@ -189,7 +190,7 @@ foreach ($students as $student) {
         $total_score += floatval($attainment);
         $table .= '<td>' . $attainment . '</td>';
     }
-    $average_score = $student_averages[$student];
+    $average_score = floatval($student_averages[$student]);
     $table .= '<td class="course bg-blue-100"><b>' . $total_score . '</b></td><td class="course bg-blue-100"><b>' . round($average_score,2) . '</b></td></tr>';
 }
 // Build the table footer with course averages
@@ -198,7 +199,10 @@ foreach ($courses as $course) {
     $course_attainments = array();
     foreach ($data as $student => $attainments) {
         if (isset($attainments[$course])) {
-            $course_attainments[] = $attainments[$course];
+            $attainment = $attainments[$course];
+            if ($attainment !== '' && $attainment !== null) {
+                $course_attainments[] = $attainment;
+            }
         }
     }
     $course_average = count($course_attainments) > 0 ? array_sum($course_attainments) / count($course_attainments) : '-';
@@ -231,7 +235,8 @@ function exportTableToCSV() {
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "analysis.csv");
+    var filename = "<?php echo $allformGroups; ?>";
+    link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
 }
