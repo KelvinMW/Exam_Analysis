@@ -193,6 +193,22 @@ foreach ($students as $student) {
     $average_score = floatval($student_averages[$student]);
     $table .= '<td class="course bg-blue-100"><b>' . $total_score . '</b></td><td class="course bg-blue-100"><b>' . round($average_score,2) . '</b></td></tr>';
 }
+// Build the table footer with course totals
+$table .= '<tr><td></td><td><b>Course Total<b></td>';
+foreach ($courses as $course) {
+    $course_attainments = array();
+    foreach ($data as $student => $attainments) {
+        if (isset($attainments[$course])) {
+            $attainment = $attainments[$course];
+            if ($attainment !== '' && $attainment !== null) {
+                $course_attainments[] = $attainment;
+            }
+        }
+    }
+    $course_total = array_sum($course_attainments);
+    $table .= '<td class="course bg-blue-100"><b>' . $course_total . '</b></td>';
+}
+$table .= '<td></td><td></td></tr>';
 // Build the table footer with course averages
 $table .= '<tr><td></td><td><b>Mean Score<b></td>';
 foreach ($courses as $course) {
@@ -211,7 +227,6 @@ foreach ($courses as $course) {
 //add export
 $table .= '<td></td><td><button onclick="exportTableToCSV()" class="btn btn-primary">Export</button></td></tr>';
 $table .= '</table>';
-
 
 // Output the table
 echo $table;
