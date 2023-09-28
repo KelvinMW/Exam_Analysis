@@ -65,7 +65,7 @@ $types = $settingGateway->getSettingByScope('Formal Assessment', 'internalAssess
 
 //add courses
 $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
-$sql = "SELECT gibbonCourseID as value, nameShort as name FROM gibbonCourse WHERE gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY name";
+$sql = "SELECT gibbonCourseID as value, name as name FROM gibbonCourse WHERE gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY name";
 $row = $form->addRow()->addClass('course bg-blue-100');
 $row->addLabel('courses[]', __('Select Courses'));
 $selected=array();
