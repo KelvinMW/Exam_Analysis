@@ -18,9 +18,11 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Gibbon\Forms\Input\Button;
 use Gibbon\Forms\Input\Input;
+use Gibbon\Domain\FormGroups\FormGroupGateway;
+use Gibbon\Domain\School\YearGroupGateway;
 
-echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>';
+//echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+//<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>';
 //get alternative headers
 $settingGateway = $container->get(SettingGateway::class);
 $attainmentAlternativeName = $settingGateway->getSettingByScope('Markbook', 'attainmentAlternativeName');
@@ -32,10 +34,58 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/analysis_vie
 else
 
 {
-    //import phpSpreadsheet classes
-//require __DIR__.'/vendor/autoload.php';
+    echo '
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
 
-// Module includes
+        .container {
+            max-width: 100%;
+            padding: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .table-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .table {
+            width: 100%;
+            margin: 10px;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h5>Exam Analysis</h5>
+    </div>
+</body>
+</html>
+    ';
+    // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
   // School Year Info
   $settingGateway = $container->get(SettingGateway::class);
@@ -161,11 +211,13 @@ $table = '<table>';
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
 $table .= '<button onclick="exportTableToCSV()" class="btn btn-primary">Export to CSV</button>';
 $table .= '</td><tr>';
-
+$formGroupGateway = $container->get(FormGroupGateway::class);
+//$gateway = $container->get(FormGroupGateway::class);
 $table .= '<tr><th colspan="' . (count($courses) + 4) . '">';
 foreach($formGroups as $formGroup){
-$table .= '<b>' . $formGroup. ', ' . '</b>';
-$allformGroups .= $formGroup. ', ';
+   // getFormGroupByID
+$formGroupName=$formGroupGateway->getFormGroupByID($formGroup);
+$table .= '<b>' . $formGroupName['name']. ', ' . '</b>';
 }
 $table .= '<b> EXAM NAME: ' . $exam_type. '' . '</b>';
 $table .= '</th><tr>';
@@ -211,7 +263,10 @@ foreach ($courses as $course) {
 $table .= '<td></td><td></td></tr>';
 // Build the table footer with course averages
 $table .= '<tr><td></td><td><b>Mean Score<b></td>';
+$class_course_total=0;
+$course_count = 0;
 foreach ($courses as $course) {
+        $course_count=$course_count+1;
     $course_attainments = array();
     foreach ($data as $student => $attainments) {
         if (isset($attainments[$course])) {
@@ -221,11 +276,13 @@ foreach ($courses as $course) {
             }
         }
     }
+    $class_course_total = $class_course_total+array_sum($course_attainments);
     $course_average = count($course_attainments) > 0 ? array_sum($course_attainments) / count($course_attainments) : '-';
     $table .= '<td class="course bg-blue-100"><b>' . round($course_average, 2) . '</b></td>';
 }
 //add export
-$table .= '<td></td><td><button onclick="exportTableToCSV()" class="btn btn-primary">Export</button></td></tr>';
+$allclass_mean = $class_course_total/(count($courses)*count($formGroups));
+$table .= '<td  class="course bg-blue-100"><b>Form Group Mean: <b>'.round($allclass_mean,2).'</td><td><button onclick="exportTableToCSV()" class="button border rounded-r-sm text-base text-gray-600">Export</button></td></tr>';
 $table .= '</table>';
 
 // Output the table
@@ -250,7 +307,7 @@ function exportTableToCSV() {
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    var filename = "<?php echo $allformGroups; ?>";
+    var filename = "ExamAnalysis";
     link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
