@@ -263,7 +263,7 @@ foreach ($courses as $course) {
 $table .= '<td></td><td></td></tr>';
 // Build the table footer with course averages
 $table .= '<tr><td></td><td><b>Mean Score<b></td>';
-$class_course_total=0;
+$class_course_total_average=0;
 $course_count = 0;
 foreach ($courses as $course) {
         $course_count=$course_count+1;
@@ -276,12 +276,12 @@ foreach ($courses as $course) {
             }
         }
     }
-    $class_course_total = $class_course_total+array_sum($course_attainments);
     $course_average = count($course_attainments) > 0 ? array_sum($course_attainments) / count($course_attainments) : '-';
+    $class_course_total_average = $class_course_total_average+$course_average;
     $table .= '<td class="course bg-blue-100"><b>' . round($course_average, 2) . '</b></td>';
 }
 //add export
-$allclass_mean = $class_course_total/(count($courses)*count($formGroups));
+$allclass_mean = $class_course_total_average/(count($courses)*count($formGroups));
 $table .= '<td  class="course bg-blue-100"><b>Form Group Mean: <b>'.round($allclass_mean,2).'</td><td><button onclick="exportTableToCSV()" class="button border rounded-r-sm text-base text-gray-600">Export</button></td></tr>';
 $table .= '</table>';
 
