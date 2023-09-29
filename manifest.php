@@ -25,7 +25,7 @@ $description = 'This module is for administrators to do exam analysis';         
 $entryURL    = "analysis_view.php";   // The landing page for the unit, used in the main menu
 $type        = "Additional";  // Do not change.
 $category    = 'Assess';            // The main menu area to place the module in
-$version     = '1.1.00';            // Version number
+$version     = '1.2.00';            // Version number
 $author      = 'Kelvin';            // Your name
 $url         = 'https://github.com/KelvinMW';            // Your URL
 
