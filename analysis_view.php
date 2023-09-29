@@ -209,7 +209,10 @@ $students = array_keys($student_averages);
 $table = '<table>';
 // Build the export button
 $table .= '<tr><td colspan="' . (count($courses) + 2) . '">';
-$table .= '<button onclick="exportTableToCSV()" class="btn btn-primary">Export to CSV</button>';
+$table .= '<button onclick="exportTableToCSV()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+<svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+<span>Export</span>
+</button>';
 $table .= '</td><tr>';
 $formGroupGateway = $container->get(FormGroupGateway::class);
 //$gateway = $container->get(FormGroupGateway::class);
@@ -219,7 +222,7 @@ foreach($formGroups as $formGroup){
 $formGroupName=$formGroupGateway->getFormGroupByID($formGroup);
 $table .= '<b>' . $formGroupName['name']. ', ' . '</b>';
 }
-$table .= '<b> EXAM NAME: ' . $exam_type. '' . '</b>';
+$table .= '<b> Exam Name: ' . $exam_type. '' . '</b>';
 $table .= '</th><tr>';
 
 $table .= '<tr><th>Rank</th>';
@@ -282,7 +285,10 @@ foreach ($courses as $course) {
 }
 //add export
 $allclass_mean = $class_course_total_average/(count($courses)*count($formGroups));
-$table .= '<td  class="course bg-blue-100"><b>Form Group Mean: <b>'.round($allclass_mean,2).'</td><td><button onclick="exportTableToCSV()" class="button border rounded-r-sm text-base text-gray-600">Export</button></td></tr>';
+$table .= '<td  class="course bg-blue-100"><b>Form Group Mean: <b>'.round($allclass_mean,2).'</td><td><button onclick="exportTableToCSV()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+<svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+<span>Export</span>
+</button></td></tr>';
 $table .= '</table>';
 
 // Output the table
