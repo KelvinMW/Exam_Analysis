@@ -32,12 +32,7 @@ $url         = 'https://github.com/KelvinMW';            // Your URL
 /*/ Module tables & gibbonSettings entries
 //$moduleTables[] = ''; // One array entry for every database table you need to create. Might be nice to preface the table name with the module name, to keep the db neat. 
 //$moduleTables[] = ''; // Also can be used to put data into gibbonSettings. Other sql can be run, but resulting data will not be cleaned up on uninstall.
-
 */
-/*$moduleTables[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID`, `scope`, `name`, `nameDisplay`, `description`, `value`)
-    VALUES
-        (NULL, 'Exam Analysis', 'analyse', 'Exam Analysis', 'Analyse different exams. Better.', '')";
-        */
 // Add gibbonSettings entries
 $gibbonSetting[] = "INSERT INTO `gibbonSetting` (`gibbonSettingID`, `scope`, `name`, `nameDisplay`, `description`, `value`)
 VALUES
@@ -45,6 +40,7 @@ VALUES
 
 // Action rows 
 // One array per action
+//Exam Analysis per exam type
 $actionRows[] = [
     'name'                      => 'Exam Analysis', // The name of the action (appears to user in the right hand side module menu)
     'precedence'                => '0',// If it is a grouped action, the precedence controls which is highest action in group
@@ -64,30 +60,29 @@ $actionRows[] = [
     'categoryPermissionParent'  => 'N', // Should this action be available to user roles in the Parent category?
     'categoryPermissionOther'   => 'Y', // Should this action be available to user roles in the Other category?
 ];
-// Action rows 
-// One array per action
 
-/*
+//Exam Analysis: Mean score deviation per subject for selected exam type
 $actionRows[] = [
-    'name'                      => 'Graphical Analysis', // The name of the action (appears to user in the right hand side module menu)
+    'name'                      => 'Mean Score Deviation', // The name of the action (appears to user in the right hand side module menu)
     'precedence'                => '0',// If it is a grouped action, the precedence controls which is highest action in group
     'category'                  => 'Analysis', // Optional: subgroups for the right hand side module menu
     'description'               => 'This module is for administrators to do exam analysis', // Text description
-    'URLList'                   => 'graphical_anasysis_view.php', // List of pages included in this action
-    'entryURL'                  => 'graphical_anasysis_view.php', // The landing action for the page.
+    'URLList'                   => 'meanDeviation.php', // List of pages included in this action
+    'entryURL'                  => 'meanDeviation.php', // The landing action for the page.
     'entrySidebar'              => 'Y', // Whether or not there's a sidebar on entry to the action
     'menuShow'                  => 'Y', // Whether or not this action shows up in menus or if it's hidden
-    'defaultPermissionAdmin'    => 'Y', // Default permission for built in role Admin
-    'defaultPermissionTeacher'  => 'Y', // Default permission for built in role Teacher
-    'defaultPermissionStudent'  => 'N', // Default permission for built in role Student
-    'defaultPermissionParent'   => 'N', // Default permission for built in role Parent
-    'defaultPermissionSupport'  => 'Y', // Default permission for built in role Support
+    'defaultPermissionAdmin'    => 'Y', // Default permission for built-in role Admin
+    'defaultPermissionTeacher'  => 'Y', // Default permission for built-in role Teacher
+    'defaultPermissionStudent'  => 'N', // Default permission for built-in role Student
+    'defaultPermissionParent'   => 'N', // Default permission for built-in role Parent
+    'defaultPermissionSupport'  => 'Y', // Default permission for built-in role Support
     'categoryPermissionStaff'   => 'Y', // Should this action be available to user roles in the Staff category?
-    'categoryPermissionStudent' => 'Y', // Should this action be available to user roles in the Student category?
-    'categoryPermissionParent'  => 'Y', // Should this action be available to user roles in the Parent category?
+    'categoryPermissionStudent' => 'N', // Should this action be available to user roles in the Student category?
+    'categoryPermissionParent'  => 'N', // Should this action be available to user roles in the Parent category?
     'categoryPermissionOther'   => 'Y', // Should this action be available to user roles in the Other category?
 ];
-*/
+// Action rows 
+
 // Hooks 
 //$hooks[] = ''; // Serialised array to create hook and set options. See Hooks documentation online.
 
