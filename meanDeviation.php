@@ -118,6 +118,7 @@ $courseIndex = array_search($row['CourseName'], $courseNames);
 $meanScores[$courseIndex][] = $row['mean_score'];
 }
 }
+}
 // Generate the graph using a charting library like Chart.js
 
 ?>
@@ -130,38 +131,41 @@ $meanScores[$courseIndex][] = $row['mean_score'];
 </head>
 <body>
     <canvas id="meanDeviationChart"></canvas>
-
     <script>
     var ctx = document.getElementById('meanDeviationChart').getContext('2d');
     var chart;
-    <?php if (!empty($meanScores)): ?>
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: <?php echo json_encode($examTypes); ?>,
-                datasets: [
-                    <?php foreach ($courseNames as $index => $courseName): ?>
-                        {
-                            label: '<?php echo $courseName; ?>',
-                            data: [<?php echo implode(',', $meanScores[$index]); ?>],
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        },
-                    <?php endforeach; ?>
-                ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    var colors = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(201, 203, 207, 0.2)'];
+    var borderColors = ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 159, 64, 1)', 'rgba(255, 205, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(153, 102, 255, 1)', 'rgba(201, 203, 207, 1)'];
+
+    if (colors.length === 0 || borderColors.length === 0) {
+        console.error('Colors arrays cannot be empty');
+        return;
+    }
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($examTypes); ?>,
+            datasets: [
+                <?php foreach ($courseNames as $index => $courseName): ?>
+                    {
+                        label: '<?php echo $courseName; ?>',
+                        data: [<?php echo implode(',', $meanScores[$index]); ?>],
+                        backgroundColor: colors[<?php echo $index % colors.length; ?>],
+                        borderColor: borderColors[<?php echo $index % borderColors.length; ?>],
+                        borderWidth: 1
+                    },
+                <?php endforeach; ?>
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
-    <?php else: ?>
-        ctx.innerHTML = "No data available for the selected parameters.";
-    <?php endif; ?>
+        }
+    });
 </script>
 </body>
 </html>
