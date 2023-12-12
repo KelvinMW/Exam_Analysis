@@ -1,5 +1,4 @@
 <?php
-//This is the code that finally works, how do I improve the graphs to make them look better?
 // Include the Gibbon class
 use Gibbon\Contracts\Services\Session;
 use Gibbon\Contracts\Database\Connection;
@@ -28,6 +27,33 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanDeviatio
     $page->addError('You do not have permission to access this page.');
     $page->addError('Please contact your system administrator if you require access to this page.');
 } else {
+//Function to prepare data for the chart
+    function prepareDataForChart($fetchedData) {
+        $labels = [];
+        $datasets = [];
+    
+        foreach ($fetchedData as $data) {
+            if (!in_array($data['CourseName'], $labels)) {
+                $labels[] = $data['CourseName'];
+            }
+    
+            $datasetIndex = array_search($data['exam_type'], array_column($datasets, 'label'));
+            if ($datasetIndex === false) {
+                $color = 'rgba('.rand(0,255).','.rand(0,255).','.rand(0,255).',0.2)';
+                $datasets[] = [
+                    'label' => $data['exam_type'],
+                    'data' => [$data['mean_score']],
+                    'backgroundColor' => $color,
+                    'borderColor' => $color,
+                    'borderWidth' => 1
+                ];
+            } else {
+                $datasets[$datasetIndex]['data'][] = $data['mean_score'];
+            }
+        }
+    
+        return ['labels' => $labels, 'datasets' => $datasets];
+    }
     //form for the query parameters
     $settingGateway = $container->get(SettingGateway::class);
     $form = Form::create('action', $session->get('absoluteURL') . '/index.php?q=/modules/Exam Analysis/meanDeviation.php');
@@ -121,84 +147,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanDeviatio
         
         // Fetch the results
         $results = $result->fetchAll(PDO::FETCH_ASSOC);
+        $chartData = prepareDataForChart($results);
                 if (empty($results)) {
             echo 'No data found in the database.';
         } else {
             // Continue with processing and building datasets
         }        
-// Prepare the data for the chart
-$datasets = [];
-$labels = [];
 
-foreach ($results as $row) {
-    $examType = $row['exam_type'];
-    $courseName = $row['CourseName'];
-    $meanScore = $row['mean_score'];
-
-    // Populate labels array if not already present
-    if (!in_array($examType, $labels)) {
-        $labels[] = $examType;
     }
-
-    // Populate datasets array
-    if (!isset($datasets[$courseName])) {
-        $datasets[$courseName] = [
-            'label' => $courseName,
-            'data' => [],
-            'backgroundColor' => 'rgba(121,150,248,0.2)',
-            'borderColor' => 'rgba(145,145,14,0.2)',
-            'borderWidth' => 1,
-        ];
-    }
-
-    // Add mean score to the corresponding dataset
-    $datasets[$courseName]['data'][] = $meanScore;
-}
-
-// Transform datasets array into a simple indexed array
-$datasetsForChart = array_values($datasets);
-
-// Create an associative array for the chart data
-$chartData = ['labels' => $labels, 'datasets' => $datasetsForChart];
-
-// Print the data for debugging
-echo 'Labels: ';
-print_r($chartData['labels']);
-
-echo 'Datasets: ';
-print_r($chartData['datasets']);
-        // Function to generate random colors
-        function generateRandomColors($count)
-        {
-            $colors = [];
-            for ($i = 0; $i < $count; $i++) {
-                $colors[] = 'rgba(' . mt_rand(0, 255) . ',' . mt_rand(0, 255) . ',' . mt_rand(0, 255) . ',0.2)';
-            }
-            return $colors;
-        }
-        // Adjust colors dynamically based on the number of datasets
-        $colors = generateRandomColors(count($datasets));
-        $borderColors = generateRandomColors(count($datasets));
-
-
-        echo 'Labels: ';
-        print_r(isset($datasetsForChart[0]) ? array_keys($datasetsForChart[0]) : []);
-
-        echo 'Datasets: ';
-        print_r(isset($datasetsForChart) ? $datasetsForChart : []);
-    }
-}
-
-function complex_array_encode($complex_array) {
-    $result = [];
-    foreach ($complex_array as $key => $value) {
-        if (is_array($value)) {
-            $result[$key] = complex_array_encode($value);
-        } else {
-            $result[$key] = $value;
-        }
-    }
-    return json_encode($result);
 }
 ?>
 <!DOCTYPE html>
@@ -210,34 +166,21 @@ function complex_array_encode($complex_array) {
 <body>
     <canvas id="myChart"></canvas>
     <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-// Example of customizing bar chart options
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php echo json_encode($chartData['labels']); ?>,
-        datasets: <?php echo json_encode($chartData['datasets']); ?>
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($chartData['labels']); ?>,
+            datasets: <?php echo json_encode($chartData['datasets']); ?>
         },
-        indexAxis: 'y', // Use 'y' for horizontal bar chart
-        elements: {
-            bar: {
-                backgroundColor: 'rgba(121,150,248,0.8)', // Customize bar color
-                borderColor: 'rgba(145,145,14,0.8)', // Customize bar border color
-                borderWidth: 1 // Customize bar border width
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        },
-        barPercentage: 0.8, // Adjust the width of bars (percentage of available space)
-        categoryPercentage: 0.9, // Adjust the width of bar categories (percentage of available space)
-        maxBarThickness: 50 // Maximum bar thickness
-    }
-});
-
-    </script>
+        }
+    });
+</script>
 </body>
 </html>
