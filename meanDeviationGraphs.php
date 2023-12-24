@@ -128,8 +128,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanDeviatio
         AND iac.type IN ($examTypePlaceholders)
         AND c.gibbonCourseID IN ($coursePlaceholders)
         AND fg.gibbonFormGroupID IN ($formGroupPlaceholders)
-        GROUP BY c.name, iac.type";
-               
+        GROUP BY c.name, iac.type";       
         // Prepare sql statement
         $params = array(':gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
         foreach ($selectedCourses as $key => $value) {
