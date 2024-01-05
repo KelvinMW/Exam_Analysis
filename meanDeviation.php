@@ -1,5 +1,17 @@
 <?php
-//Analyse this code and check for possible errors
+/**
+Error message:
+[04-Jan-2024 23:47:02 Africa/Nairobi] Warning: array_keys() expects parameter 1 to be array, null given in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 82
+[04-Jan-2024 23:47:02 Africa/Nairobi] Warning: array_map(): Expected parameter 2 to be an array, null given in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 82
+[04-Jan-2024 23:47:02 Africa/Nairobi] Warning: implode(): Invalid arguments passed in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 82
+[04-Jan-2024 23:47:02 Africa/Nairobi] Warning: Invalid argument supplied for foreach() in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 85
+[04-Jan-2024 23:47:02 Africa/Nairobi] Warning: Invalid argument supplied for foreach() in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 89
+[04-Jan-2024 23:47:02 Africa/Nairobi] Warning: array_merge(): Expected parameter 2 to be an array, null given in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 97
+[04-Jan-2024 23:47:02 Africa/Nairobi] Uncaught Exception: PDOException - SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Grade THEN e.attainmentValue ELSE NULL END) AS mean_deviation_type1,
+          ' at line 8 in /shared/httpd/sis.loc/htdocs/modules/Exam Analysis/meanDeviation.php on line 142
+ */
+//help me fix this error
+//Syntax Error:The primary error lies within the subquery's GROUP BY clause on line 8. Review the placeholder usage and grouping logic.
 // Include the Gibbon class
 use Gibbon\Contracts\Services\Session;
 use Gibbon\Contracts\Database\Connection;
