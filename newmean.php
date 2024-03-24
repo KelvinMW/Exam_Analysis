@@ -1,8 +1,5 @@
 <?
-//The database has correct data
-//After Form submit there is no data or table being deisplayed
-// This function does not diplay anything echo renderHtmlTable($meanScores, $deviations);
-// Since no table is being displayed, Add debug to $_POST, mean execution, meanDeviation
+// Include the Gibbon class
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\Form;
@@ -52,29 +49,16 @@ if(isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanDeviation
     $row = $form->addRow();
     $row->addFooter();
     $row->addSubmit();
-
-//debug
-error_log("POST Data: " . print_r($_POST, true));
 $form -> loadAllValuesFrom($request);
     echo $form->getOutput();
-    if (!empty($selectedFormGroups) && !empty($selectedCourses) && !empty($examType1) && !empty($examType2)) {
-        // After fetching selected form data, to ensure data is being fetched correctly
-   $data = fetchSelectedFormData($pdo, $selectedFormGroups, $selectedCourses, $examType1, $examType2);
-error_log("Selected Form Data: " . print_r($selectedFormData, true));
-
-        $meanScores = calculateMeanScores($pdo, $data, $examType1, $examType2);
-        // After calculating mean scores, to see if the calculations appear correct
-$meanScores = calculateMeanScores($pdo, $data, $examType1, $examType2);
-error_log("Mean Scores: " . print_r($meanScores, true));
-        $deviations = calculateDeviations($meanScores, $examType1, $examType2);
-        // After calculating deviations, to verify the deviations are computed as expected
-$deviations = calculateDeviations($meanScores, $examType1, $examType2);
-error_log("Deviations: " . print_r($deviations, true));
-        echo renderHtmlTable($meanScores, $deviations);
-    } else {
+    $selectedCourses = isset($_POST['courses']) ? $_POST['courses'] : [];
+    $examType1 = isset($_POST['examType1']) ? $_POST['examType1'] : [];
+    $examType2 = isset($_POST['examType2']) ? $_POST['examTtype2'] : [];
+    $selectedFormGroups = isset($_POST['gibbonFormGroupID']) ? $_POST['gibbonFormGroupID'] : [];
+    if (empty($selectedCourses) || empty($exam_type1) || empty($exam_type2) || empty($selectedFormGroups)) {
+        // Show an error message or skip the query execution
         $page->addError("Please select at least one course and one exam type.");
-        return; // Stop further execution if the required fields are not filled.
-    } 
+    } else {;
 function fetchSelectedFormData($pdo, $selectedFormGroups, $selectedCourses, $examType1, $examType2) {
     $placeholders = str_repeat('?,', count($selectedFormGroups) - 1) . '?';
     $placeholdersCourses = str_repeat('?,', count($selectedCourses) - 1) . '?';
@@ -102,21 +86,22 @@ function fetchSelectedFormData($pdo, $selectedFormGroups, $selectedCourses, $exa
 
     return $data;
 }
+$data = fetchSelectedFormData($pdo, $selectedFormGroups, $selectedCourses, $examType1, $examType2);
 // Calculating mean scores
-function calculateMeanScores($pdo, $data, $examType1, $examType2) {
+function calculateMeanScores($pdo, $selectedFormData, $examType1, $examType2) {
   $meanScores = [];
 
-  foreach ($data as $row) {
-      $key = $row['gibbonFormGroupID'] . '-' . $row['gibbonCourseID'] . '-' . $row['examType'];
+  foreach ($selectedFormData as $data) {
+      $key = $data['gibbonFormGroupID'] . '-' . $data['gibbonCourseID'] . '-' . $data['examType'];
       if (!isset($meanScores[$key])) {
           $meanScores[$key] = [
-              'formGroup' => $row['formGroupName'],
-              'course' => $row['courseName'],
-              'examType' => $row['examType'],
+              'formGroup' => $data['formGroupName'],
+              'course' => $data['courseName'],
+              'examType' => $data['examType'],
               'scores' => [],
           ];
       }
-      $meanScores[$key]['scores'][] = $row['attainmentValue'];
+      $meanScores[$key]['scores'][] = $data['attainmentValue'];
   }
 
   foreach ($meanScores as $key => &$details) {
@@ -165,24 +150,19 @@ function renderHtmlTable($meanScores, $deviations) {
 // Placeholder for form submission data
 $selectedFormGroups = $_POST['gibbonFormGroupID'];
 $selectedCourses = $_POST['courses'];
-$examType1 = $_POST['examType1'];
-$examType2 = $_POST['examType2'];
+$examType1 = $_POST['exam_type1'];
+$examType2 = $_POST['exam_type2'];
+
 // Fetch the selected form data
-$data = fetchSelectedFormData($pdo, $selectedFormGroups, $selectedCourses, $examType1, $examType2);
-error_log("Selected Form Data: " . print_r($data, true));
+$selectedFormData = fetchSelectedFormData($pdo, $selectedFormGroups, $selectedCourses, $examType1, $examType2);
 
 // Calculate mean scores
-$meanScores = calculateMeanScores($pdo, $data, $examType1, $examType2);
+$meanScores = calculateMeanScores($pdo, $selectedFormData, $examType1, $examType2);
 
-// After calculating mean scores, to see if the calculations appear correct
-$meanScores = calculateMeanScores($pdo, $data, $examType1, $examType2);
-error_log("Mean Scores: " . print_r($meanScores, true));
 // Calculate deviations
 $deviations = calculateDeviations($meanScores, $examType1, $examType2);
-// After calculating deviations, to verify the deviations are computed as expected
-$deviations = calculateDeviations($meanScores, $examType1, $examType2);
-error_log("Deviations: " . print_r($deviations, true));
+
 // Render HTML table
 echo renderHtmlTable($meanScores, $deviations);
     }
-  
+  }
