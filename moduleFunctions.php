@@ -61,32 +61,30 @@
     return $meanScores;
     }
 //Calculate Deviations
-    function calculateDeviations($meanScores, $examType1, $examType2) {
-        $deviations = [];
-    
-        foreach ($meanScores as $key => $details) {
-        error_log('Pair Key Mean Score: ' . print_r($meanScores[$pairKey]['meanScore'], true));
-        error_log('Details Mean Score: ' . print_r($details['meanScore'], true));
-            $otherExamType = ($details['examType'] === $examType1) ? $examType2 : $examType1;
-            $pairKey = str_replace($details['examType'], $otherExamType, $key);
-    
-            if (isset($meanScores[$pairKey])) {
-                $deviation = $meanScores[$pairKey]['meanScore'] - $details['meanScore'];
-            } else {
-                $deviation = 0; // Or any other value indicating missing data
-            }
-    
-            $deviationKey = $details['formGroup'] . '-' . $details['course'];
-            $deviations[$deviationKey] = [
-                'formGroup' => $details['formGroup'],
-                'course' => $details['course'],
-                'deviation' => $deviation,
-            ];
+function calculateDeviations($meanScores, $examType1, $examType2) {
+    $deviations = [];
+
+    foreach ($meanScores as $key => $details) {
+        $otherExamType = ($details['examType'] === $examType1) ? $examType2 : $examType1;
+        $pairKey = str_replace($details['examType'], $otherExamType, $key);
+
+        if (isset($meanScores[$pairKey])) {
+            // Reverse the order of subtraction here
+            $deviation = $details['meanScore'] - $meanScores[$pairKey]['meanScore'];
+        } else {
+            $deviation = 0; // Or any other value indicating missing data
         }
-        error_log('Calculated Deviations: ' . print_r($deviations, true));
-        return $deviations;
+
+        $deviationKey = $details['formGroup'] . '-' . $details['course'];
+        $deviations[$deviationKey] = [
+            'formGroup' => $details['formGroup'],
+            'course' => $details['course'],
+            'deviation' => $deviation,
+        ];
     }
-    
+    error_log('Calculated Deviations: ' . print_r($deviations, true));
+    return $deviations;
+}    
     function getCourseNameById($connection2, $gibbonCourseID) {
         $sql = "SELECT name FROM gibbonCourse WHERE gibbonCourseID=:gibbonCourseID";
         $stmt = $connection2->prepare($sql);
