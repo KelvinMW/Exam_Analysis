@@ -19,7 +19,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanDeviatio
             $data = fetchData($connection2, $selectedFormGroups, $selectedCourses, $examType1, $examType2);
             $meanScores = calculateMeanScores($data);
             $deviations = calculateDeviations($meanScores, $examType1, $examType2);
-            echo renderHtmlTable($meanScores, $deviations);
+
+            echo renderHtmlTable($meanScores,$deviations,$examType1,$examType2 );
         } else {
             $page->addError("Please select at least one course and one exam type.");
         }
