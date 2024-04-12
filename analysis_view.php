@@ -135,9 +135,6 @@ echo $form->getOutput();
 //run on submit
 if (!empty($_POST['courses'])) {
 $courses = $_POST['courses']?? array();
-foreach ($courses as $courseID) {
-    echo "<br>Course ID: $courseID";
-}
 $exam_type = $_POST['type']?? null;
 $formGroups = $_POST['gibbonFormGroupID']?? null;
 // Construct SQL query
@@ -322,7 +319,6 @@ function exportTableToCSV() {
     link.click();
 }
 </script>';
-
 
 }
 }

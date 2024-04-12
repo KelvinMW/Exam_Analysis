@@ -108,10 +108,56 @@ function calculateDeviations($meanScores, $examType1, $examType2) {
         // make php send the generated csv lines to the browser
         fpassthru($f);
     }    
-// modify this function to dynamically generate the courses name from the selected courses  
+// Render HTML table  
 function renderHtmlTable($meanScores, $deviations, $examType1, $examType2) {
+    $html = '<style>
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+                    font-family: Arial, sans-serif;
+                    margin-top: 20px;
+                }
+                th, td { 
+                    border: 1px solid #ddd; 
+                    padding: 10px; 
+                    text-align: left; 
+                    font-size: 14px;
+                }
+                th {
+                    background-color: #4CAF50;
+                    color: black;
+                    font-size: 16px;
+                }
+                tr:nth-child(even) {
+                    background-color: #f2f2f2;
+                }
+                tr:hover {
+                    background-color: #ddd;
+                }
+                .positive-deviation { 
+                    color: #28a745; 
+                    font-weight: bold;
+                }
+                .negative-deviation { 
+                    color: #dc3545; 
+                    font-weight: bold;
+                }
+                button {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 15px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 16px;
+                }
+                button:hover {
+                    background-color: #45a049;
+                }
+            </style>';
     // Begin table HTML
-    $html = "<table>
+    $html .= "<table>
                 <tr>
                     <th>Form Group</th>
                     <th>Exam Type</th>";
@@ -150,7 +196,15 @@ function renderHtmlTable($meanScores, $deviations, $examType1, $examType2) {
         foreach ($courseNames as $courseName) {
             $devKey = "$formGroup-$courseName";
             $deviation = isset($deviations[$devKey]) ? number_format($deviations[$devKey]['deviation'], 2) : 'N/A';
-            $html .= "<td>$deviation</td>";
+            $formattedDeviation = ($deviation === 'N/A') ? 'N/A' : number_format((float)$deviation, 2);
+            // Apply styling based on deviation value
+            $deviationStyle = '';
+            if ($deviation !== 'N/A' && $deviation < 0) {
+                $deviationStyle = 'negative-deviation';
+            } elseif ($deviation !== 'N/A' && $deviation > 0) {
+                $deviationStyle = 'positive-deviation';
+            }
+        $html .= "<td class='$deviationStyle'>$formattedDeviation</td>";
         }
         // Calculate form group mean deviation
         $meanDeviation = 'N/A';
@@ -158,8 +212,13 @@ function renderHtmlTable($meanScores, $deviations, $examType1, $examType2) {
             $meanExamType1 = array_sum($formGroupMeans[$formGroup][$examType1]) / count($formGroupMeans[$formGroup][$examType1]);
             $meanExamType2 = array_sum($formGroupMeans[$formGroup][$examType2]) / count($formGroupMeans[$formGroup][$examType2]);
             $meanDeviation = number_format($meanExamType2 - $meanExamType1, 2);
+            if ($meanDeviation !== 'N/A' && $meanDeviation < 0) {
+                $meanDeviationStyle = 'negative-deviation';
+            } elseif ($meanDeviation !== 'N/A' && $meanDeviation > 0) {
+                $meanDeviationStyle = 'positive-deviation';
+            }
         }
-        $html .= "<td>$meanDeviation</td></tr>";
+        $html .= "<td class='$meanDeviationStyle'>$meanDeviation</td></tr>";
     }
 
 // Add a button with an onclick event handler to call your export function
