@@ -113,7 +113,7 @@ $types = $settingGateway->getSettingByScope('Formal Assessment', 'internalAssess
     $gibbonFormGroupID=array();
     $row->addSelectFormGroup('gibbonFormGroupID', $session->get('gibbonSchoolYearID'))->required()->selectMultiple()->selected($gibbonFormGroupID)->placeholder();
 
-//add courses
+//add courses sample
 $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
 $sql = "SELECT gibbonCourseID as value, name as name FROM gibbonCourse WHERE gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY name";
 $row = $form->addRow()->addClass('course bg-blue-100');
@@ -326,4 +326,3 @@ function exportTableToCSV() {
 
 }
 }
-?>
