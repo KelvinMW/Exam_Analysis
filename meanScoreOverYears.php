@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
 </head>
 <body>
     <div class="container">
-        <h1>ELM Lower Primary: Overall Mean Score Trend</h1>
+        <h1>ELM Lower Primary: Yearly Overall Mean Score Trend</h1>
         <table>
             <tbody>
                 <tr>
@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
         </table>
     </div>
     <div class="container">
-    <h1>ELM Lower: Form Groups</h1>
+    <h1>Form Group Mean Score [Current Year]</h1>
     <table>
         <tbody>
 
