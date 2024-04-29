@@ -63,12 +63,12 @@ $actionRows[] = [
 
 //Exam Analysis: Mean score deviation per subject for selected exam type
 $actionRows[] = [
-    'name'                      => 'Mean Deviation Graphs', // The name of the action (appears to user in the right hand side module menu)
+    'name'                      => 'Mean Score Over Years', // The name of the action (appears to user in the right hand side module menu)
     'precedence'                => '0',// If it is a grouped action, the precedence controls which is highest action in group
-    'category'                  => 'Analysis', // Optional: subgroups for the right hand side module menu
+    'category'                  => 'Graphs', // Optional: subgroups for the right hand side module menu
     'description'               => 'This module is for administrators to do exam analysis', // Text description
-    'URLList'                   => 'meanDeviationGraphs.php', // List of pages included in this action
-    'entryURL'                  => 'meanDeviationGraphs.php', // The landing action for the page.
+    'URLList'                   => 'meanScoreOverYears.php', // List of pages included in this action
+    'entryURL'                  => 'meanScoreOverYears.php', // The landing action for the page.
     'entrySidebar'              => 'Y', // Whether or not there's a sidebar on entry to the action
     'menuShow'                  => 'Y', // Whether or not this action shows up in menus or if it's hidden
     'defaultPermissionAdmin'    => 'Y', // Default permission for built-in role Admin
