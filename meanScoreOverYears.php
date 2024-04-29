@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
 </head>
 <body>
     <div class="container">
-        <h1>ELM Lower Primary: Yearly Overall Mean Score Trend</h1>
+        <h1>ELM Upper Primary: Yearly Overall Mean Score Trend</h1>
         <table>
             <tbody>
                 <tr>
@@ -61,7 +61,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
                     seamless
                     frameBorder="0"
                     scrolling="no"
-                    src="https://new-h.elmischools.com/superset/explore/p/3LQEmn3PMBe/?standalone=1&height=400"
+                    src="https://new-h.elmischools.com/superset/explore/p/P9AEoNXArXl/?standalone=1&height=400"
                   >
                   </iframe></td>
                 </tr>
@@ -80,7 +80,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
   seamless
   frameBorder="0"
   scrolling="no"
-  src="https://new-h.elmischools.com/superset/explore/p/q3ZDnyOKMwK/?standalone=1&height=400"
+  src="https://new-h.elmischools.com/superset/explore/p/m7WDj05YEzx/?standalone=1&height=400"
 >
 </iframe>
             </tr>
