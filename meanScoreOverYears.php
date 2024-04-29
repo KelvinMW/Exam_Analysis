@@ -51,7 +51,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
 </head>
 <body>
     <div class="container">
-        <h1>ELM Secondary: Overall Mean Score Trend</h1>
+        <h1>ELM Masala: Yearly Overall Mean Score Trend</h1>
         <table>
             <tbody>
                 <tr>
@@ -61,7 +61,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
                     seamless
                     frameBorder="0"
                     scrolling="no"
-                    src="https://new-h.elmischools.com/superset/explore/p/z7KExgn4rXm/?standalone=1&height=400"
+                    src="https://new-h.elmischools.com/superset/explore/p/5BQDl65lEkN/?standalone=1&height=400"
                   >
                   </iframe></td>
                 </tr>
@@ -69,18 +69,18 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
         </table>
     </div>
     <div class="container">
-    <h1>ELM Secondary: Form Groups</h1>
+    <h1>Form Group Mean Score [Current Year]</h1>
     <table>
         <tbody>
 
             <tr>
             <iframe
-width="600"
-height="400"
-seamless
-frameBorder="0"
-scrolling="no"
-src="https://new-h.elmischools.com/superset/explore/p/dRvMPVKArJ0/?standalone=1&height=400"
+  width="600"
+  height="400"
+  seamless
+  frameBorder="0"
+  scrolling="no"
+  src="https://new-h.elmischools.com/superset/explore/p/dROMVXRlrbY/?standalone=1&height=400"
 >
 </iframe>
             </tr>
