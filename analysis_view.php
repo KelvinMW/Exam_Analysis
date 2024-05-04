@@ -191,7 +191,7 @@ foreach ($students as $student) {
     $num_scores = 0;
     foreach ($courses as $course) {
         $attainment = isset($data[$student][$course]) ? $data[$student][$course] : '-';
-        if ($attainment !== '' && $attainment !== null) {
+        if ($attainment !== '' && $attainment !== null && $attainment !='-') {
             $total_score += floatval($attainment);
             $num_scores++;
         }
@@ -283,8 +283,8 @@ foreach ($courses as $course) {
     $class_course_total_average = $class_course_total_average+$course_average;
     $table .= '<td class="course bg-blue-100"><b>' . round($course_average, 2) . '</b></td>';
 }
-//add export
-$allclass_mean = $class_course_total_average/(count($courses)*count($formGroups));
+//$all class_mean is showing incorrect formgroup mean score
+$allclass_mean = $class_course_total_average/$course_count;
 $table .= '<td  class="course bg-blue-100"><b>Form Group Mean: <b>'.round($allclass_mean,2).'</td><td><button onclick="exportTableToCSV()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
 <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
 <span>Export</span>
