@@ -74,16 +74,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
         <tbody>
 
             <tr>
-            <iframe
+	    <iframe
   width="600"
   height="400"
   seamless
   frameBorder="0"
   scrolling="no"
-  src="https://new-h.elmischools.com/superset/explore/p/q3ZDnyPKMwK/?standalone=1&height=400"
+  src="https://data.elmischools.com/superset/explore/p/6WeEWZalrwb/?standalone=1&height=400"
 >
 </iframe>
-            </tr>
+	    </tr>
         </tbody>
     </table>
 </div>
