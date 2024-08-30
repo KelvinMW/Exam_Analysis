@@ -80,7 +80,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
   seamless
   frameBorder="0"
   scrolling="no"
-  src="https://data.elmischools.com/superset/explore/p/6WeEWZalrwb/?standalone=1&height=400"
+  src="https://data.elmischools.com/superset/explore/p/m7WDj0JLEzx/?standalone=1&height=400"
 >
 </iframe>
 	    </tr>
