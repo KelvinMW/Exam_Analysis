@@ -56,14 +56,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/meanScoreOve
             <tbody>
                 <tr>
                     <td><iframe
-                    width="600"
-                    height="400"
-                    seamless
-                    frameBorder="0"
-                    scrolling="no"
-                    src="https://new-h.elmischools.com/superset/explore/p/6lBD7pXxr5L/?standalone=1&height=400"
-                  >
-                  </iframe></td>
+  width="600"
+  height="400"
+  seamless
+  frameBorder="0"
+  scrolling="no"
+  src="https://data.elmischools.com/superset/explore/p/KYNMkQlvrdj/?standalone=1&height=400"
+>
+</iframe></td>
                 </tr>
             </tbody>
         </table>
