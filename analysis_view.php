@@ -34,57 +34,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Exam Analysis/analysis_vie
 else
 
 {
-    echo '
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            max-width: 100%;
-            padding: 10px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .table-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .table {
-            width: 100%;
-            margin: 10px;
-        }
-
-        th, td {
-            text-align: center;
-            padding: 10px;
-        }
-
-        iframe {
-            width: 100%;
-            height: 400px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h5>Exam Analysis</h5>
-    </div>
-</body>
-</html>
-    ';
+    
     // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
   // School Year Info
@@ -139,19 +89,21 @@ $exam_type = $_POST['type']?? null;
 $formGroups = $_POST['gibbonFormGroupID']?? null;
 // Construct SQL query
 $sql = "SELECT p.officialName AS StudentName, c.name AS CourseName, gibbonInternalAssessmentEntry.attainmentValue AS Attainment
-        FROM gibbonInternalAssessmentEntry  
-        INNER JOIN gibbonPerson AS p ON p.gibbonPersonID = gibbonInternalAssessmentEntry.gibbonPersonIDStudent 
-        INNER JOIN gibbonStudentEnrolment AS e ON gibbonInternalAssessmentEntry.gibbonPersonIDStudent=e.gibbonPersonID 
-        INNER JOIN gibbonFormGroup AS y ON e.gibbonFormGroupID=y.gibbonFormGroupID
-        INNER JOIN gibbonInternalAssessmentColumn ON gibbonInternalAssessmentColumn.gibbonInternalAssessmentColumnID= gibbonInternalAssessmentEntry.gibbonInternalAssessmentColumnID 
-        INNER JOIN gibbonCourseClass ON gibbonCourseClass.gibbonCourseClassID = gibbonInternalAssessmentColumn.gibbonCourseClassID
-        INNER JOIN gibbonCourse AS c ON c.gibbonCourseID = gibbonCourseClass.gibbonCourseID
-        INNER JOIN gibbonSchoolYear AS s ON y.gibbonSchoolYearID=s.gibbonSchoolYearID 
-        WHERE c.gibbonCourseID IN (" . str_repeat('?,', count($courses) - 1) . "?) 
-        AND y.gibbonFormGroupID IN (" . str_repeat('?,', count($formGroups) - 1) . "?) 
-        AND s.gibbonSchoolYearID = ?
-        AND gibbonInternalAssessmentColumn.type = ?
-        ORDER BY p.officialName, c.name";
+    FROM gibbonInternalAssessmentEntry  
+    INNER JOIN gibbonPerson AS p ON p.gibbonPersonID = gibbonInternalAssessmentEntry.gibbonPersonIDStudent 
+    INNER JOIN gibbonStudentEnrolment AS e ON gibbonInternalAssessmentEntry.gibbonPersonIDStudent=e.gibbonPersonID 
+    INNER JOIN gibbonFormGroup AS y ON e.gibbonFormGroupID=y.gibbonFormGroupID
+    INNER JOIN gibbonInternalAssessmentColumn ON gibbonInternalAssessmentColumn.gibbonInternalAssessmentColumnID= gibbonInternalAssessmentEntry.gibbonInternalAssessmentColumnID 
+    INNER JOIN gibbonCourseClass ON gibbonCourseClass.gibbonCourseClassID = gibbonInternalAssessmentColumn.gibbonCourseClassID
+    INNER JOIN gibbonCourse AS c ON c.gibbonCourseID = gibbonCourseClass.gibbonCourseID
+    INNER JOIN gibbonCourseClassPerson AS cp ON cp.gibbonCourseClassID = gibbonCourseClass.gibbonCourseClassID AND cp.gibbonPersonID = p.gibbonPersonID
+    INNER JOIN gibbonSchoolYear AS s ON y.gibbonSchoolYearID=s.gibbonSchoolYearID 
+    WHERE c.gibbonCourseID IN (" . str_repeat('?,', count($courses) - 1) . "?) 
+    AND y.gibbonFormGroupID IN (" . str_repeat('?,', count($formGroups) - 1) . "?) 
+    AND s.gibbonSchoolYearID = ?
+    AND gibbonInternalAssessmentColumn.type = ?
+    AND cp.role = 'Student'
+    ORDER BY p.officialName, c.name";
 
 // Prepare and execute SQL query with parameters
 $stmt = $connection2->prepare($sql);
@@ -160,27 +112,41 @@ $stmt->execute($params);
 
 // Build the output table
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$students = array();
-$courses = array();
-foreach ($results as $row) {
-    $student = $row['StudentName'];
-    $course = $row['CourseName'];
-    $attainment = $row['Attainment'];
-    
-    // Build array of unique students and courses
-    if (!in_array($student, $students)) {
-        $students[] = $student;
-    }
-    if (!in_array($course, $courses)) {
-        $courses[] = $course;
-    }
-    
-    // Store attainment value for each student and course
-    $data[$student][$course] = $attainment;
+//debug($results);
+if (empty($results)) {
+    echo '<p>No data found for the selected courses.</p>';
+    return;
 }
 
-// Sort courses alphabetically
-sort($courses);
+function processData($results) {
+    $students = [];
+    $courses = [];
+    $data = [];
+
+    foreach ($results as $row) {
+        $student = $row['StudentName'];
+        $course = $row['CourseName'];
+        $attainment = $row['Attainment'];
+
+        // Build array of unique students and courses
+        if (!in_array($student, $students)) {
+            $students[] = $student;
+        }
+        if (!in_array($course, $courses)) {
+            $courses[] = $course;
+        }
+
+        // Store attainment value for each student and course
+        $data[$student][$course] = $attainment;
+    }
+
+    // Sort courses alphabetically
+    sort($courses);
+
+    return [$students, $courses, $data];
+}
+
+list($students, $courses, $data) = processData($results);
 // Build the table rows
 $student_averages = array();
 
@@ -205,6 +171,60 @@ foreach ($students as $student) {
 arsort($student_averages);
 // Reorder students array based on sorted keys
 $students = array_keys($student_averages);
+//display chart
+echo '
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .table-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .table {
+            width: 100%;
+            margin: 10px;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h5>Exam Analysis</h5>
+        <canvas id="examChart"></canvas>
+    </div>
+</body>
+</html>
+    ';
 // Build the table headers assuming all query data is okay
 $table = '<table>';
 // Build the export button
@@ -318,6 +338,61 @@ function exportTableToCSV() {
     document.body.appendChild(link);
     link.click();
 }
+
+// Prepare data for Chart.js
+var students = ' . json_encode($students) . ';
+var courses = ' . json_encode($courses) . ';
+var data = ' . json_encode($data) . ';
+
+// Create datasets for each course
+var datasets = courses.map(function(course) {
+    return {
+        label: course,
+        data: students.map(function(student) {
+            return data[student][course] ? parseFloat(data[student][course]) : 0;
+        }),
+        fill: false,
+        borderColor: getRandomColor(),
+        tension: 0.1
+    };
+});
+
+// Generate random color for each dataset
+function getRandomColor() {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+// Create the chart
+var ctx = document.getElementById("examChart").getContext("2d");
+var examChart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: students,
+        datasets: datasets
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: "Students"
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: "Attainment"
+                }
+            }
+        }
+    }
+});
 </script>';
 
 }
